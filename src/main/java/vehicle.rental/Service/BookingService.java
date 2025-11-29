@@ -1,15 +1,15 @@
-package Service;
+package vehicle.rental.Service;
 
-import com.ComputerScience.Vehicle.Rental.Model.Booking;
-import com.ComputerScience.Vehicle.Rental.Model.Customer;
-import com.ComputerScience.Vehicle.Rental.Model.Vehicle;
-import Repository.BookingRepo;
-import Repository.CustomerRepo;
-import Repository.VehicleRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import vehicle.rental.Model.Booking;
+import vehicle.rental.Model.Customer;
+import vehicle.rental.Model.Vehicle;
+import vehicle.rental.Repository.BookingRepo;
+import vehicle.rental.Repository.CustomerRepo;
+import vehicle.rental.Repository.VehicleRepo;
 
 import java.util.List;
 

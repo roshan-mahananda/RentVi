@@ -1,10 +1,10 @@
-package Service;
+package vehicle.rental.Service;
 
-import com.ComputerScience.Vehicle.Rental.Model.Vehicle;
-import Repository.VehicleRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import vehicle.rental.Model.Vehicle;
+import vehicle.rental.Repository.VehicleRepo;
 
 import java.util.List;
 

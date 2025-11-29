@@ -1,8 +1,8 @@
-package Controller;
+package vehicle.rental.Controller;
 
-import com.ComputerScience.Vehicle.Rental.Model.Booking;
-import com.ComputerScience.Vehicle.Rental.Service.BookingService;
 import org.springframework.web.bind.annotation.*;
+import vehicle.rental.Model.Booking;
+import vehicle.rental.Service.BookingService;
 
 import java.util.List;
 

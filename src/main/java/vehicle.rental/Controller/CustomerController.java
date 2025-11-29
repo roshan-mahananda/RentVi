@@ -1,10 +1,10 @@
-package Controller;
+package vehicle.rental.Controller;
 
-import com.ComputerScience.Vehicle.Rental.Model.Customer;
-import com.ComputerScience.Vehicle.Rental.Service.CustomerService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vehicle.rental.Model.Customer;
+import vehicle.rental.Service.CustomerService;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class CustomerController {
     }
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> addCustomer( @RequestBody Customer customer) {
+    public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) {
         Customer saved = customerService.addCustomer(customer);
         return ResponseEntity.ok(saved);
     }
