@@ -2,6 +2,7 @@ package vehicle.rental.Controller;
 
 import org.springframework.web.bind.annotation.*;
 import vehicle.rental.Model.Booking;
+import vehicle.rental.RequestDTOs.BookingRequestDTO;
 import vehicle.rental.Service.BookingService;
 
 import java.util.List;
@@ -17,10 +18,8 @@ public class BookingController {
     }
 
     @PostMapping("/book")
-    public String bookVehicle(@RequestParam int customerId,
-                              @RequestParam int vehicleId,
-                              @RequestParam int numberOfDays) {
-        return bookingService.bookVehicle(customerId, vehicleId, numberOfDays);
+    public String bookVehicle(@RequestBody BookingRequestDTO bookingRequestDTO) {
+        return bookingService.bookVehicle(bookingRequestDTO);
     }
 
     @PostMapping("/return/{bookingId}")

@@ -10,13 +10,12 @@ import vehicle.rental.Model.Vehicle;
 import vehicle.rental.Repository.BookingRepo;
 import vehicle.rental.Repository.CustomerRepo;
 import vehicle.rental.Repository.VehicleRepo;
+import vehicle.rental.RequestDTOs.BookingRequestDTO;
 
 import java.util.List;
 
 @Service
 public class BookingService {
-
-    private final Logger logger = LoggerFactory.getLogger(BookingService.class);
 
     private final BookingRepo bookingRepo;
     private final CustomerRepo customerRepo;
@@ -29,51 +28,41 @@ public class BookingService {
     }
 
     @Transactional
-    public String bookVehicle(int customerId, int vehicleId, int numberOfDays) {
-        logger.info("Requested for booking for vehicle id : {} and customer id : {}",vehicleId,customerId);
-        logger.warn("Checking if the user and vehicle both exists or not.");
-        Customer customer = customerRepo.findById(customerId)
+    public String bookVehicle(BookingRequestDTO bookingRequestDTO) {
+        Customer customer = customerRepo.findById(bookingRequestDTO.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
-        Vehicle vehicle = vehicleRepo.findById(vehicleId)
+        Vehicle vehicle = vehicleRepo.findById(bookingRequestDTO.getVehicleId())
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
 
-        logger.warn("Check if the vehicle is available to book or not.");
         if (!vehicle.isAvailable()) {
             return "Vehicle is not available for booking!";
         }
 
-        logger.info("Calculate the total rent for customer.");
-        double totalRentPrice = vehicle.getPrice() * numberOfDays;
+        double totalRentPrice = vehicle.getPrice() * bookingRequestDTO.getNumberOfDays();
 
         Booking booking = new Booking();
         booking.setCustomer(customer);
         booking.setVehicle(vehicle);
-        booking.setNumberOfDays(numberOfDays);
+        booking.setNumberOfDays(bookingRequestDTO.getNumberOfDays());
         booking.setTotalRentPrice(totalRentPrice);
 
-        logger.info("Booking is getting saved.");
         bookingRepo.save(booking);
 
-        logger.info("Vehicle is set to unavailable.");
         vehicle.setAvailable(false);
         vehicleRepo.save(vehicle);
 
         return String.format(
                 "Booking successful! Vehicle: %s | Days: %d | Total Rent: ₹%.2f",
-                vehicle.getModel(), numberOfDays, totalRentPrice
+                vehicle.getModel(), bookingRequestDTO.getNumberOfDays(), totalRentPrice
         );
     }
 
     @Transactional
     public String returnVehicle(int bookingId) {
-        logger.info("Requested for vehicle return for booking id : {}",bookingId);
-
-        logger.warn("Checking if booking exists or not.");
         Booking booking = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
         Vehicle vehicle = booking.getVehicle();
 
-        logger.info("Vehicle id {} status updated.",booking.getVehicle().getId());
         vehicle.setAvailable(true);
         vehicleRepo.save(vehicle);
 
