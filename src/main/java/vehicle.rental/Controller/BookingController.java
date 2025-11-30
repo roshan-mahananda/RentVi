@@ -1,8 +1,10 @@
 package vehicle.rental.Controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vehicle.rental.Model.Booking;
-import vehicle.rental.RequestDTOs.BookingRequestDTO;
+import vehicle.rental.RequestEntities.BookingRequest;
+import vehicle.rental.ResponseEntities.BookingResponse;
 import vehicle.rental.Service.BookingService;
 
 import java.util.List;
@@ -18,8 +20,8 @@ public class BookingController {
     }
 
     @PostMapping("/book")
-    public String bookVehicle(@RequestBody BookingRequestDTO bookingRequestDTO) {
-        return bookingService.bookVehicle(bookingRequestDTO);
+    public ResponseEntity<BookingResponse> bookVehicle(@RequestBody BookingRequest bookingRequestDTO) {
+        return ResponseEntity.ok(bookingService.bookVehicle(bookingRequestDTO));
     }
 
     @PostMapping("/return/{bookingId}")

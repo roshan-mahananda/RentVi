@@ -1,19 +1,27 @@
-package vehicle.rental.ResponseDTOs;
+package vehicle.rental.ResponseEntities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import vehicle.rental.Model.Customer;
-import vehicle.rental.Model.Vehicle;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class BookingResponseDTO {
-    private Customer customer;
-    private Vehicle vehicle;
+public class BookingResponse {
+    private Long bookingId;
+
+    private Long customerId;
+    private String name;
+    private String email;
+
+    private Long vehicleId;
+    private String type;
+    private String brand;
+    private double pricePerDay;
+
     private int totalDays;
-    private int totalRent;
+    private double totalRent;
+    private String message;
 }

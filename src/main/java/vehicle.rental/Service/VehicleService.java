@@ -2,16 +2,17 @@ package vehicle.rental.Service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import vehicle.rental.Model.Vehicle;
 import vehicle.rental.Repository.VehicleRepo;
+import vehicle.rental.RequestEntities.VehicleRequest;
+import vehicle.rental.ResponseEntities.VehicleResponse;
 
 import java.util.List;
 
 @Service
 public class VehicleService {
-
-    private final Logger logger = LoggerFactory.getLogger(VehicleService.class);
 
     private final VehicleRepo vehicleRepo;
 
@@ -19,12 +20,24 @@ public class VehicleService {
         this.vehicleRepo = vehicleRepo;
     }
 
-    public Vehicle addVehicle(Vehicle vehicle) {
-        return vehicleRepo.save(vehicle);
+    public VehicleResponse addVehicle(VehicleRequest vehicleRequest) {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setType(vehicleRequest.getType());
+        vehicle.setBrand(vehicleRequest.getBrand());
+        vehicle.setModel(vehicleRequest.getModel());
+        vehicle.setPrice(vehicleRequest.getPrice());
+
+        vehicleRepo.save(vehicle);
+        
+        return new VehicleResponse(vehicle.getId(),
+                vehicle.getType(),
+                vehicle.getBrand(),
+                vehicle.getModel(),
+                vehicle.getPrice(),
+                vehicle.isAvailable());
     }
 
     public List<Vehicle> addVehicles(List<Vehicle> vehicles) {
-        logger.info("Request to add {} vehicles", vehicles.size());
         return vehicleRepo.saveAll(vehicles);
     }
 

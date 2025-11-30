@@ -1,4 +1,4 @@
-package vehicle.rental.RequestDTOs;
+package vehicle.rental.RequestEntities;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingRequestDTO {
+public class BookingRequest {
     int customerId;
     int vehicleId;
     int numberOfDays;

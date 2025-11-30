@@ -1,7 +1,5 @@
 package vehicle.rental.Service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vehicle.rental.Model.Booking;
@@ -10,7 +8,8 @@ import vehicle.rental.Model.Vehicle;
 import vehicle.rental.Repository.BookingRepo;
 import vehicle.rental.Repository.CustomerRepo;
 import vehicle.rental.Repository.VehicleRepo;
-import vehicle.rental.RequestDTOs.BookingRequestDTO;
+import vehicle.rental.RequestEntities.BookingRequest;
+import vehicle.rental.ResponseEntities.BookingResponse;
 
 import java.util.List;
 
@@ -28,33 +27,31 @@ public class BookingService {
     }
 
     @Transactional
-    public String bookVehicle(BookingRequestDTO bookingRequestDTO) {
+    public BookingResponse bookVehicle(BookingRequest bookingRequestDTO) {
         Customer customer = customerRepo.findById(bookingRequestDTO.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
         Vehicle vehicle = vehicleRepo.findById(bookingRequestDTO.getVehicleId())
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
 
         if (!vehicle.isAvailable()) {
-            return "Vehicle is not available for booking!";
+            return new BookingResponse(null,customer.getId(),null,null,null,null,null,0,0,0,"vehicle is not available");
         }
 
-        double totalRentPrice = vehicle.getPrice() * bookingRequestDTO.getNumberOfDays();
+        double totalRent = vehicle.getPrice() * bookingRequestDTO.getNumberOfDays();
 
         Booking booking = new Booking();
-        booking.setCustomer(customer);
         booking.setVehicle(vehicle);
+        booking.setCustomer(customer);
         booking.setNumberOfDays(bookingRequestDTO.getNumberOfDays());
-        booking.setTotalRentPrice(totalRentPrice);
+        booking.setTotalRentPrice(totalRent);
 
         bookingRepo.save(booking);
 
         vehicle.setAvailable(false);
         vehicleRepo.save(vehicle);
 
-        return String.format(
-                "Booking successful! Vehicle: %s | Days: %d | Total Rent: ₹%.2f",
-                vehicle.getModel(), bookingRequestDTO.getNumberOfDays(), totalRentPrice
-        );
+
+        return new BookingResponse(booking.getId(),customer.getId(),customer.getName(),customer.getEmail(),vehicle.getId(),vehicle.getType(),vehicle.getBrand(),vehicle.getPrice(),bookingRequestDTO.getNumberOfDays(),totalRent,"Vehicle Booked");
     }
 
     @Transactional
