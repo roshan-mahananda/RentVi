@@ -1,8 +1,5 @@
 package vehicle.rental.Service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import vehicle.rental.Model.Vehicle;
 import vehicle.rental.Repository.VehicleRepo;
