@@ -1,7 +1,10 @@
 package vehicle.rental.Controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vehicle.rental.Model.Vehicle;
+import vehicle.rental.RequestEntities.VehicleRequest;
+import vehicle.rental.ResponseEntities.VehicleResponse;
 import vehicle.rental.Service.VehicleService;
 
 import java.util.List;
@@ -17,8 +20,8 @@ public class VehicleController {
     }
 
     @PostMapping("/add")
-    public Vehicle addVehicle(@RequestBody Vehicle vehicle) {
-        return vehicleService.addVehicle(vehicle);
+    public ResponseEntity<VehicleResponse> addVehicle(@RequestBody VehicleRequest vehicleRequest) {
+        return ResponseEntity.ok(vehicleService.addVehicle(vehicleRequest));
     }
 
     @PostMapping("/addVehicles")

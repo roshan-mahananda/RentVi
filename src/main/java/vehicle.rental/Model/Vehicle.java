@@ -31,44 +31,4 @@ public class Vehicle {
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
     @JsonIgnoreProperties({"customer", "vehicle"})
     private List<Booking> bookings;
-
-
-    public Vehicle(String brand, String model, double price) {
-        this.brand = brand;
-        this.model = model;
-        this.price = price;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-
-    public String getBrand() {
-        return brand;
-    }
-
-
-    public String getModel() {
-        return model;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-
-    public List<Booking> getBookings() {
-        return bookings;
-    }
-
 }
