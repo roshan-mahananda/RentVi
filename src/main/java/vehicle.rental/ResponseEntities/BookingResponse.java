@@ -10,13 +10,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class BookingResponse {
-    private Long bookingId;
+    private int bookingId;
 
-    private Long customerId;
+    private int customerId;
     private String name;
     private String email;
 
-    private Long vehicleId;
+    private int vehicleId;
     private String type;
     private String brand;
     private double pricePerDay;

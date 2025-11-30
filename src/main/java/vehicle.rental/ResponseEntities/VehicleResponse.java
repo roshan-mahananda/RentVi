@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 public class VehicleResponse {
-    private Long id;
+    private int id;
 
     private String type;
     private String brand;

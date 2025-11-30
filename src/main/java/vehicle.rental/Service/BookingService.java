@@ -34,7 +34,7 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
 
         if (!vehicle.isAvailable()) {
-            return new BookingResponse(null,customer.getId(),null,null,null,null,null,0,0,0,"vehicle is not available");
+            return new BookingResponse(-1,customer.getId(),null,null,-1,null,null,0,0,0,"vehicle is not available");
         }
 
         double totalRent = vehicle.getPrice() * bookingRequestDTO.getNumberOfDays();
