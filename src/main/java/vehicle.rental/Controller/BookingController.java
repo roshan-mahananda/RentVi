@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import vehicle.rental.Model.Booking;
 import vehicle.rental.RequestEntities.BookingRequest;
 import vehicle.rental.ResponseEntities.BookingResponse;
+import vehicle.rental.ResponseEntities.ReturnBookings;
 import vehicle.rental.Service.BookingService;
 
 import java.util.List;
@@ -25,8 +26,8 @@ public class BookingController {
     }
 
     @PostMapping("/return/{bookingId}")
-    public String returnVehicle(@PathVariable int bookingId) {
-        return bookingService.returnVehicle(bookingId);
+    public ResponseEntity<ReturnBookings> returnVehicle(@PathVariable int bookingId) {
+        return ResponseEntity.ok(bookingService.returnVehicle(bookingId));
     }
 
     @GetMapping
