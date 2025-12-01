@@ -12,6 +12,7 @@ import vehicle.rental.RequestEntities.BookingRequest;
 import vehicle.rental.ResponseEntities.BookingResponse;
 import vehicle.rental.ResponseEntities.ReturnBookings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -94,12 +95,39 @@ public class BookingService {
                 "Vehicle Returned Successfully");
     }
 
-    public List<Booking> getAllBookings() {
-        return bookingRepo.findAll();
+    public List<BookingResponse> getAllBookings() {
+        List<Booking> bookingList = bookingRepo.findAll();
+        List<BookingResponse> bookingResponseList = new ArrayList<>();
+        for (Booking booking : bookingList){
+            BookingResponse bookingResponse = new BookingResponse(booking.getId(),
+                    booking.getCustomer().getId(),
+                    booking.getCustomer().getName(),
+                    booking.getCustomer().getEmail(),
+                    booking.getVehicle().getId(),
+                    booking.getVehicle().getType(),
+                    booking.getVehicle().getBrand(),
+                    booking.getVehicle().getPrice(),
+                    booking.getNumberOfDays(),
+                    booking.getTotalRentPrice(),
+                    "Booking Detail");
+            bookingResponseList.add(bookingResponse);
+        }
+        return bookingResponseList;
     }
 
-    public Booking getBookingById(int bookingId) {
-        return bookingRepo.findById(bookingId)
+    public BookingResponse getBookingById(int bookingId) {
+        Booking booking = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
+        return new BookingResponse(booking.getId(),
+                booking.getCustomer().getId(),
+                booking.getCustomer().getName(),
+                booking.getCustomer().getEmail(),
+                booking.getVehicle().getId(),
+                booking.getVehicle().getType(),
+                booking.getVehicle().getBrand(),
+                booking.getVehicle().getPrice(),
+                booking.getNumberOfDays(),
+                booking.getTotalRentPrice(),
+                "Booking");
     }
 }
