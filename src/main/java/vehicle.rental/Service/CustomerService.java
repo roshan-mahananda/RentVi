@@ -3,6 +3,8 @@ package vehicle.rental.Service;
 import org.springframework.stereotype.Service;
 import vehicle.rental.Model.Customer;
 import vehicle.rental.Repository.CustomerRepo;
+import vehicle.rental.RequestEntities.CustomerRequest;
+import vehicle.rental.ResponseEntities.CustomerResponse;
 
 import java.util.List;
 
@@ -16,17 +18,26 @@ public class CustomerService {
         this.customerRepo = customerRepo;
     }
 
-    public Customer addCustomer(Customer customer){
-        if(customerRepo.existsByEmail(customer.getEmail())){
-            throw new RuntimeException("Customer can't be added. Email already exists: " + customer.getEmail());
+    public CustomerResponse addCustomer(CustomerRequest customerRequest){
+        if(customerRepo.existsByEmail(customerRequest.getEmail())){
+            throw new RuntimeException("Customer can't be added. Email already exists: " + customerRequest.getEmail());
         }
-        return customerRepo.save(customer);
+        Customer customer = new Customer();
+        customer.setName(customerRequest.getName());
+        customer.setEmail(customerRequest.getEmail());
+        customer.setAddress(customerRequest.getAddress());
+
+        customerRepo.save(customer);
+
+        return new CustomerResponse(customer.getId(),
+                customer.getName(),
+                customer.getEmail(),
+                customer.getAddress());
     }
 
     public List<Customer> addCustomers(List<Customer> customers) {
         return customerRepo.saveAll(customers); // saves all in one go
     }
-
 
     public void deleteCustomer(int id){
         if(!customerRepo.existsById(id)){
