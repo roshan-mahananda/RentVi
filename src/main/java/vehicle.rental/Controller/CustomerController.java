@@ -4,6 +4,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import vehicle.rental.Model.Customer;
+import vehicle.rental.RequestEntities.CustomerRequest;
+import vehicle.rental.ResponseEntities.CustomerResponse;
 import vehicle.rental.Service.CustomerService;
 
 import java.util.List;
@@ -19,14 +21,13 @@ public class CustomerController {
     }
 
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Customer> addCustomer(@RequestBody Customer customer) {
-        Customer saved = customerService.addCustomer(customer);
-        return ResponseEntity.ok(saved);
+    public ResponseEntity<CustomerResponse> addCustomer(@RequestBody CustomerRequest customerRequest) {
+        return ResponseEntity.ok(customerService.addCustomer(customerRequest));
     }
 
     @PostMapping("/addCustomers")
-    public List<Customer> addCustomers(@RequestBody List<Customer> customers) {
-        return customerService.addCustomers(customers);
+    public ResponseEntity<List<CustomerResponse>> addCustomers(@RequestBody List<CustomerRequest> customers) {
+        return ResponseEntity.ok(customerService.addCustomers(customers));
     }
 
     @GetMapping("/all")

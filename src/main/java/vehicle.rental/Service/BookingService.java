@@ -10,7 +10,9 @@ import vehicle.rental.Repository.CustomerRepo;
 import vehicle.rental.Repository.VehicleRepo;
 import vehicle.rental.RequestEntities.BookingRequest;
 import vehicle.rental.ResponseEntities.BookingResponse;
+import vehicle.rental.ResponseEntities.ReturnBookings;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,7 +22,9 @@ public class BookingService {
     private final CustomerRepo customerRepo;
     private final VehicleRepo vehicleRepo;
 
-    public BookingService(BookingRepo bookingRepo, CustomerRepo customerRepo, VehicleRepo vehicleRepo) {
+    public BookingService(BookingRepo bookingRepo,
+                          CustomerRepo customerRepo,
+                          VehicleRepo vehicleRepo) {
         this.bookingRepo = bookingRepo;
         this.customerRepo = customerRepo;
         this.vehicleRepo = vehicleRepo;
@@ -34,7 +38,17 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("Vehicle not found"));
 
         if (!vehicle.isAvailable()) {
-            return new BookingResponse(-1,customer.getId(),null,null,-1,null,null,0,0,0,"vehicle is not available");
+            return new BookingResponse(-1,
+                    customer.getId(),
+                    null,
+                    null,
+                    -1,
+                    null,
+                    null,
+                    0,
+                    0,
+                    0,
+                    "vehicle is not available");
         }
 
         double totalRent = vehicle.getPrice() * bookingRequestDTO.getNumberOfDays();
@@ -51,27 +65,69 @@ public class BookingService {
         vehicleRepo.save(vehicle);
 
 
-        return new BookingResponse(booking.getId(),customer.getId(),customer.getName(),customer.getEmail(),vehicle.getId(),vehicle.getType(),vehicle.getBrand(),vehicle.getPrice(),bookingRequestDTO.getNumberOfDays(),totalRent,"Vehicle Booked");
+        return new BookingResponse(booking.getId(),
+                customer.getId(),
+                customer.getName(),
+                customer.getEmail(),
+                vehicle.getId(),
+                vehicle.getType(),
+                vehicle.getBrand(),
+                vehicle.getPrice(),
+                bookingRequestDTO.getNumberOfDays(),
+                totalRent,"Vehicle Booked");
     }
 
     @Transactional
-    public String returnVehicle(int bookingId) {
+    public ReturnBookings returnVehicle(int bookingId) {
         Booking booking = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
         Vehicle vehicle = booking.getVehicle();
+        Customer customer = booking.getCustomer();
 
         vehicle.setAvailable(true);
         vehicleRepo.save(vehicle);
 
-        return "Vehicle " + vehicle.getModel() + " returned successfully!";
+        return new ReturnBookings(customer.getName(),
+                customer.getEmail(), vehicle.getId(),
+                vehicle.getType(),vehicle.getBrand(),
+                vehicle.getPrice(), booking.getNumberOfDays(),
+                booking.getTotalRentPrice(),
+                "Vehicle Returned Successfully");
     }
 
-    public List<Booking> getAllBookings() {
-        return bookingRepo.findAll();
+    public List<BookingResponse> getAllBookings() {
+        List<Booking> bookingList = bookingRepo.findAll();
+        List<BookingResponse> bookingResponseList = new ArrayList<>();
+        for (Booking booking : bookingList){
+            BookingResponse bookingResponse = new BookingResponse(booking.getId(),
+                    booking.getCustomer().getId(),
+                    booking.getCustomer().getName(),
+                    booking.getCustomer().getEmail(),
+                    booking.getVehicle().getId(),
+                    booking.getVehicle().getType(),
+                    booking.getVehicle().getBrand(),
+                    booking.getVehicle().getPrice(),
+                    booking.getNumberOfDays(),
+                    booking.getTotalRentPrice(),
+                    "Booking Detail");
+            bookingResponseList.add(bookingResponse);
+        }
+        return bookingResponseList;
     }
 
-    public Booking getBookingById(int bookingId) {
-        return bookingRepo.findById(bookingId)
+    public BookingResponse getBookingById(int bookingId) {
+        Booking booking = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
+        return new BookingResponse(booking.getId(),
+                booking.getCustomer().getId(),
+                booking.getCustomer().getName(),
+                booking.getCustomer().getEmail(),
+                booking.getVehicle().getId(),
+                booking.getVehicle().getType(),
+                booking.getVehicle().getBrand(),
+                booking.getVehicle().getPrice(),
+                booking.getNumberOfDays(),
+                booking.getTotalRentPrice(),
+                "Booking");
     }
 }
