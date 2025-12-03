@@ -26,8 +26,8 @@ public class CustomerController {
     }
 
     @PostMapping("/addCustomers")
-    public List<Customer> addCustomers(@RequestBody List<Customer> customers) {
-        return customerService.addCustomers(customers);
+    public ResponseEntity<List<CustomerResponse>> addCustomers(@RequestBody List<CustomerRequest> customers) {
+        return ResponseEntity.ok(customerService.addCustomers(customers));
     }
 
     @GetMapping("/all")

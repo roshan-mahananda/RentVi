@@ -6,6 +6,7 @@ import vehicle.rental.Repository.CustomerRepo;
 import vehicle.rental.RequestEntities.CustomerRequest;
 import vehicle.rental.ResponseEntities.CustomerResponse;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,9 +36,34 @@ public class CustomerService {
                 customer.getAddress());
     }
 
-    public List<Customer> addCustomers(List<Customer> customers) {
-        return customerRepo.saveAll(customers); // saves all in one go
+    public List<CustomerResponse> addCustomers(List<CustomerRequest> customerRequestList) {
+        List<Customer> customers = new ArrayList<>();
+
+        for (CustomerRequest customerRequest : customerRequestList) {
+            Customer customer = new Customer(
+                    customerRequest.getName(),
+                    customerRequest.getAddress(),
+                    customerRequest.getEmail()
+            );
+            customers.add(customer);
+        }
+
+        customerRepo.saveAll(customers);
+
+        List<CustomerResponse> customerResponseList = new ArrayList<>();
+        for (Customer customer : customers) {
+            CustomerResponse customerResponse = new CustomerResponse(
+                    customer.getId(),
+                    customer.getName(),
+                    customer.getEmail(),
+                    customer.getAddress()
+            );
+            customerResponseList.add(customerResponse);
+        }
+
+        return customerResponseList;
     }
+
 
     public void deleteCustomer(int id){
         if(!customerRepo.existsById(id)){
